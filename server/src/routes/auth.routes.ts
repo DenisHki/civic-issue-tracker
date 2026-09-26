@@ -3,6 +3,8 @@ import { User } from '../models/User.model';
 import { hashPassword } from '../utils/password';
 import { comparePassword } from '../utils/password';
 import { signToken } from '../utils/jwt';
+import { requireAuth, AuthRequest } from '../middleware/auth.middleware';
+
 
 const router = Router();
 
@@ -33,6 +35,11 @@ router.post('/auth/login', async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ error: 'AUTH_LOGIN_FAILED' });
   }
+});
+
+// Test route to check if the user is authenticated
+router.get('/auth/me', requireAuth, (req: AuthRequest, res: Response) => {
+  res.status(200).json({ user: req.user });
 });
 
 router.post('/auth/register', async (req: Request, res: Response) => {
