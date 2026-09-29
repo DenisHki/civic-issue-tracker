@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { env } from './config/env';
 import healthRoutes from './routes/health.routes';
 import authRoutes from './routes/auth.routes';
+import issueRoutes from './routes/issue.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -17,6 +18,7 @@ export function createApp(): Application {
   }
 
   app.use('/api', healthRoutes);
+  app.use('/api', issueRoutes);
   app.use('/api', authRoutes);
   app.get('/', (_req: Request, res: Response) => {
     res.json({ name: 'civic-issue-tracker-api', status: 'running' });
