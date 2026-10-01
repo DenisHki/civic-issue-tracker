@@ -16,6 +16,7 @@ export interface IIssue extends Document {
   municipality: string;
   reportedBy: Types.ObjectId;
   upvoteCount: number;
+  upvotedBy: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -65,6 +66,11 @@ const issueSchema = new Schema<IIssue>(
     upvoteCount: {
       type: Number,
       default: 0,
+    },
+    upvotedBy: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
+      default: [],
     },
   },
   { timestamps: true },
