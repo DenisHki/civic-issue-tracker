@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { Issue } from '../models/Issue.model';
 import { requireAuth, AuthRequest } from '../middleware/auth.middleware';
 import { requireRole } from '../middleware/auth.middleware';
+import { Types } from 'mongoose';
 
 const router = Router();
 
@@ -95,6 +96,33 @@ router.delete('/issues/:id', requireAuth, async (req: AuthRequest, res: Response
     res.status(200).json({ message: 'ISSUE_DELETED' });
   } catch (err) {
     res.status(400).json({ error: 'ISSUE_DELETE_FAILED' });
+  }
+});
+
+router.post('/issues/:id/upvote', requireAuth, async (req: AuthRequest, res: Response) => {
+  try {
+    const issue = await Issue.findById(req.params.id);
+
+    if (!issue) {
+      res.status(404).json({ error: 'ISSUE_NOT_FOUND' });
+      return;
+    }
+
+    const userId = req.user!.userId;
+    const alreadyUpvoted = issue.upvotedBy.some((id) => id.toString() === userId);
+
+    if (alreadyUpvoted) {
+      issue.upvotedBy = issue.upvotedBy.filter((id) => id.toString() !== userId);
+      issue.upvoteCount -= 1;
+    } else {
+      issue.upvotedBy.push(new Types.ObjectId(userId));
+      issue.upvoteCount += 1;
+    }
+
+    await issue.save();
+    res.status(200).json({ issue });
+  } catch (err) {
+    res.status(400).json({ error: 'ISSUE_UPVOTE_FAILED' });
   }
 });
 
