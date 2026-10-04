@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -25,6 +26,7 @@ function LocationPicker({ onPick }: { onPick: (lat: number, lng: number) => void
 }
 
 export function NewIssue() {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('pothole');
@@ -38,7 +40,7 @@ export function NewIssue() {
     setError(null);
 
     if (!location) {
-      setError('Please click the map to set a location');
+      setError(t('issueForm.errorNoLocation'));
       return;
     }
 
@@ -46,19 +48,21 @@ export function NewIssue() {
       await api.post('/issues', { title, description, category, municipality, location });
       navigate('/issues');
     } catch {
-      setError('Failed to create issue');
+      setError(t('issueForm.errorFailed'));
     }
   }
 
   return (
     <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-semibold text-slate-800 mb-4">Report an Issue</h1>
+      <h1 className="text-2xl font-semibold text-slate-800 mb-4">{t('issueForm.title')}</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && <p className="text-sm text-red-600">{error}</p>}
 
         <div>
-          <label className="block text-sm font-medium text-slate-700">Title</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t('issueForm.fieldTitle')}
+          </label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -68,7 +72,9 @@ export function NewIssue() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700">Description</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t('issueForm.fieldDescription')}
+          </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -78,22 +84,26 @@ export function NewIssue() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700">Category</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t('issueForm.fieldCategory')}
+          </label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="mt-1 w-full border border-slate-300 rounded-md px-3 py-2"
           >
-            <option value="pothole">Pothole</option>
-            <option value="streetlight">Streetlight</option>
-            <option value="graffiti">Graffiti</option>
-            <option value="waste">Waste</option>
-            <option value="other">Other</option>
+            <option value="pothole">{t('issueForm.categoryPothole')}</option>
+            <option value="streetlight">{t('issueForm.categoryStreetlight')}</option>
+            <option value="graffiti">{t('issueForm.categoryGraffiti')}</option>
+            <option value="waste">{t('issueForm.categoryWaste')}</option>
+            <option value="other">{t('issueForm.categoryOther')}</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700">Municipality</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t('issueForm.fieldMunicipality')}
+          </label>
           <input
             value={municipality}
             onChange={(e) => setMunicipality(e.target.value)}
@@ -104,7 +114,7 @@ export function NewIssue() {
 
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">
-            Click the map to set location {location && '✓'}
+            {t('issueForm.fieldLocation')} {location && '✓'}
           </label>
           <MapContainer center={[61.0587, 28.1887]} zoom={12} className="h-64 w-full rounded-lg">
             <TileLayer
@@ -120,7 +130,7 @@ export function NewIssue() {
           type="submit"
           className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700"
         >
-          Submit Report
+          {t('issueForm.submit')}
         </button>
       </form>
     </div>

@@ -1,0 +1,35 @@
+{
+  "issueForm": {
+    "title": "Tee ilmoitus",
+    "fieldTitle": "Otsikko",
+    "fieldDescription": "Kuvaus",
+    "fieldCategory": "Kategoria",
+    "fieldMunicipality": "Kunta",
+    "fieldLocation": "Valitse sijainti klikkaamalla karttaa",
+    "categoryPothole": "Kuoppa",
+    "categoryStreetlight": "Katuvalo",
+    "categoryGraffiti": "Graffiti",
+    "categoryWaste": "Jäte",
+    "categoryOther": "Muu",
+    "submit": "Lähetä ilmoitus",
+    "errorNoLocation": "Valitse sijainti klikkaamalla karttaa",
+    "errorFailed": "Ilmoituksen luominen epäonnistui"
+  },
+  "nav": {
+    "title": "Kuntalaisen vikailmoitus",
+    "issues": "Ilmoitukset",
+    "reportIssue": "Tee ilmoitus",
+    "login": "Kirjaudu sisään",
+    "register": "Rekisteröidy",
+    "logout": "Kirjaudu ulos"
+  },
+  "home": {
+    "welcomeBack": "Tervetuloa takaisin! Rooli: {{role}}",
+    "tagline": "Ilmoita ja seuraa kuntasi paikallisia ongelmia."
+  },
+  "issues": {
+    "title": "Ilmoitetut ongelmat",
+    "empty": "Ei vielä ilmoitettuja ongelmia.",
+    "loading": "Ladataan ilmoituksia..."
+  }
+}

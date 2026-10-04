@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { IssueMap } from '../components/IssueMap';
+import { useTranslation } from 'react-i18next';
 
 interface Issue {
   _id: string;
@@ -14,6 +15,7 @@ interface Issue {
 }
 
 export function Issues() {
+  const { t } = useTranslation();
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,14 +27,16 @@ export function Issues() {
   }, []);
 
   if (loading) {
-    return <p className="p-8 text-slate-600">Loading issues...</p>;
+    return <p className="p-8 text-slate-600">{t('issues.loading')}</p>;
   }
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-semibold text-slate-800">Reported Issues</h1>
+      <h1 className="text-2xl font-semibold text-slate-800">{t('issues.title')}</h1>
+
       <IssueMap issues={issues} />
-      {issues.length === 0 && <p className="text-slate-500">No issues reported yet.</p>}
+
+      {issues.length === 0 && <p className="text-slate-500">{t('issues.empty')}</p>}
 
       {issues.map((issue) => (
         <div key={issue._id} className="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
