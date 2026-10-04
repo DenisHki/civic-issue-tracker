@@ -1,0 +1,35 @@
+{
+  "issueForm": {
+    "title": "Report an Issue",
+    "fieldTitle": "Title",
+    "fieldDescription": "Description",
+    "fieldCategory": "Category",
+    "fieldMunicipality": "Municipality",
+    "fieldLocation": "Click the map to set location",
+    "categoryPothole": "Pothole",
+    "categoryStreetlight": "Streetlight",
+    "categoryGraffiti": "Graffiti",
+    "categoryWaste": "Waste",
+    "categoryOther": "Other",
+    "submit": "Submit Report",
+    "errorNoLocation": "Please click the map to set a location",
+    "errorFailed": "Failed to create issue"
+  },
+  "nav": {
+    "title": "Civic Issue Tracker",
+    "issues": "Issues",
+    "reportIssue": "Report Issue",
+    "login": "Log in",
+    "register": "Register",
+    "logout": "Log out"
+  },
+  "home": {
+    "welcomeBack": "Welcome back! Role: {{role}}",
+    "tagline": "Report and track local issues in your municipality."
+  },
+  "issues": {
+    "title": "Reported Issues",
+    "empty": "No issues reported yet.",
+    "loading": "Loading issues..."
+  }
+}
