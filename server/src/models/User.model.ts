@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
-export type UserRole = 'resident' | 'moderator' | 'admin';
+export type UserRole = 'resident' | 'moderator';
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
@@ -31,7 +31,7 @@ const userSchema = new Schema<IUser>(
     role: {
       type: String,
       enum: {
-        values: ['resident', 'moderator', 'admin'],
+        values: ['resident', 'moderator'],
         message: 'USER_ROLE_INVALID',
       },
       default: 'resident',

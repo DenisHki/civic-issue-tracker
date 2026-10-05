@@ -1,4 +1,23 @@
 {
+  "loginToUpvote": "Log in to upvote",
+  "issueDetail": {
+    "backToList": "← Back to issues",
+    "notFound": "Issue not found.",
+    "loginToUpvote": "Log in to upvote",
+    "comments": "Comments",
+    "noComments": "No comments yet.",
+    "commentPlaceholder": "Add a comment...",
+    "postComment": "Post",
+    "loginToComment": "Log in to comment",
+    "changeStatus": "Status:",
+    "deleteIssue": "Delete issue",
+    "deleteConfirm": "Delete this issue? This cannot be undone.",
+    "status": {
+      "reported": "Reported",
+      "in_progress": "In progress",
+      "resolved": "Resolved"
+    }
+  },
   "issueForm": {
     "title": "Report an Issue",
     "fieldTitle": "Title",

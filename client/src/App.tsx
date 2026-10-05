@@ -6,6 +6,7 @@ import { Issues } from './pages/Issues';
 import { Navbar } from './components/Navbar';
 import { NewIssue } from './pages/NewIssue';
 import { useTranslation } from 'react-i18next';
+import { IssueDetail } from './pages/IssueDetail';
 
 import './App.css';
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/issues" element={<Issues />} />
         <Route path="/issues/new" element={<NewIssue />} />
+        <Route path="/issues/:id" element={<IssueDetail />} />
       </Routes>
     </>
   );
