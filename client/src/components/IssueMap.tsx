@@ -3,6 +3,8 @@ import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import { useMap } from 'react-leaflet';
+import { useEffect } from 'react';
 
 const defaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -11,6 +13,18 @@ const defaultIcon = L.icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
+
+function FitBounds({ issues }: { issues: Issue[] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (issues.length === 0) return;
+    const bounds = L.latLngBounds(issues.map((i) => [i.location.lat, i.location.lng]));
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
+  }, [issues, map]);
+
+  return null;
+}
 
 interface Issue {
   _id: string;
@@ -21,12 +35,11 @@ interface Issue {
 }
 
 export function IssueMap({ issues }: { issues: Issue[] }) {
-  const center: [number, number] = issues.length
-    ? [issues[0].location.lat, issues[0].location.lng]
-    : [61.0587, 28.1887]; // Lappeenranta, fallback if no issues yet
+  const fallbackCenter: [number, number] = [61.0587, 28.1887]; // Lappeenranta
 
   return (
-    <MapContainer center={center} zoom={13} className="h-96 w-full rounded-lg">
+    <MapContainer center={fallbackCenter} zoom={6} className="h-96 w-full rounded-lg">
+      <FitBounds issues={issues} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

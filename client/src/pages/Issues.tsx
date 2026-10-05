@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { IssueMap } from '../components/IssueMap';
 import { useTranslation } from 'react-i18next';
@@ -41,7 +42,12 @@ export function Issues() {
       {issues.map((issue) => (
         <div key={issue._id} className="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
           <div className="flex justify-between items-start">
-            <h2 className="font-medium text-slate-800">{issue.title}</h2>
+            <Link
+              to={`/issues/${issue._id}`}
+              className="font-medium text-slate-800 hover:text-blue-600"
+            >
+              {issue.title}
+            </Link>
             <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">
               {issue.status}
             </span>

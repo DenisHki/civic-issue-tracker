@@ -1,4 +1,23 @@
 {
+  "loginToUpvote": "Kirjaudu sisään äänestääksesi",
+  "issueDetail": {
+    "backToList": "← Takaisin ilmoituksiin",
+    "notFound": "Ilmoitusta ei löytynyt.",
+    "loginToUpvote": "Kirjaudu sisään äänestääksesi",
+    "comments": "Kommentit",
+    "noComments": "Ei vielä kommentteja.",
+    "commentPlaceholder": "Kirjoita kommentti...",
+    "postComment": "Lähetä",
+    "loginToComment": "Kirjaudu sisään kommentoidaksesi",
+    "changeStatus": "Tila:",
+    "deleteIssue": "Poista ilmoitus",
+    "deleteConfirm": "Poistetaanko ilmoitus? Tätä ei voi perua.",
+    "status": {
+      "reported": "Ilmoitettu",
+      "in_progress": "Käsittelyssä",
+      "resolved": "Ratkaistu"
+    }
+  },
   "issueForm": {
     "title": "Tee ilmoitus",
     "fieldTitle": "Otsikko",

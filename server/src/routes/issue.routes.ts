@@ -52,7 +52,7 @@ router.get('/issues/:id', async (req, res: Response) => {
 router.patch(
   '/issues/:id/status',
   requireAuth,
-  requireRole('moderator', 'admin'),
+  requireRole('moderator'),
   async (req: AuthRequest, res: Response) => {
     try {
       const { status } = req.body;
@@ -85,7 +85,7 @@ router.delete('/issues/:id', requireAuth, async (req: AuthRequest, res: Response
     }
 
     const isOwner = issue.reportedBy.toString() === req.user!.userId;
-    const isModerator = req.user!.role === 'moderator' || req.user!.role === 'admin';
+    const isModerator = req.user!.role === 'moderator';
 
     if (!isOwner && !isModerator) {
       res.status(403).json({ error: 'AUTH_FORBIDDEN' });
