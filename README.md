@@ -35,3 +35,7 @@ npm run dev:client   # starts the frontend
 ```
 
 Each workspace has its own `.env.example` describing required environment variables.
+
+Test as a moderator:
+resident2@example.com
+mypassword123
