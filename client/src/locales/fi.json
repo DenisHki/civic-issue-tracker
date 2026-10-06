@@ -10,6 +10,11 @@
     "postComment": "Lähetä",
     "loginToComment": "Kirjaudu sisään kommentoidaksesi",
     "changeStatus": "Tila:",
+    "edit": "Muokkaa",
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "deleteComment": "Poista",
+    "deleteCommentConfirm": "Poistetaanko kommentti?",
     "deleteIssue": "Poista ilmoitus",
     "deleteConfirm": "Poistetaanko ilmoitus? Tätä ei voi perua.",
     "status": {
