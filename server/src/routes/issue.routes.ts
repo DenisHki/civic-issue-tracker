@@ -3,6 +3,7 @@ import { Issue } from '../models/Issue.model';
 import { requireAuth, AuthRequest } from '../middleware/auth.middleware';
 import { requireRole } from '../middleware/auth.middleware';
 import { Types } from 'mongoose';
+import { Comment } from '../models/Comment.model';
 
 const router = Router();
 
@@ -60,7 +61,7 @@ router.patch(
       const issue = await Issue.findByIdAndUpdate(
         req.params.id,
         { status },
-        { new: true, runValidators: true },
+        { returnDocument: 'after', runValidators: true },
       );
 
       if (!issue) {
@@ -92,7 +93,9 @@ router.delete('/issues/:id', requireAuth, async (req: AuthRequest, res: Response
       return;
     }
 
+    await Comment.deleteMany({ issue: issue._id });
     await issue.deleteOne();
+
     res.status(200).json({ message: 'ISSUE_DELETED' });
   } catch (err) {
     res.status(400).json({ error: 'ISSUE_DELETE_FAILED' });
@@ -123,6 +126,35 @@ router.post('/issues/:id/upvote', requireAuth, async (req: AuthRequest, res: Res
     res.status(200).json({ issue });
   } catch (err) {
     res.status(400).json({ error: 'ISSUE_UPVOTE_FAILED' });
+  }
+});
+
+router.patch('/issues/:id', requireAuth, async (req: AuthRequest, res: Response) => {
+  try {
+    const issue = await Issue.findById(req.params.id);
+
+    if (!issue) {
+      res.status(404).json({ error: 'ISSUE_NOT_FOUND' });
+      return;
+    }
+
+    const isOwner = issue.reportedBy.toString() === req.user!.userId;
+    const isModerator = req.user!.role === 'moderator';
+
+    if (!isOwner && !isModerator) {
+      res.status(403).json({ error: 'AUTH_FORBIDDEN' });
+      return;
+    }
+
+    const { title, description, category } = req.body;
+    if (title !== undefined) issue.title = title;
+    if (description !== undefined) issue.description = description;
+    if (category !== undefined) issue.category = category;
+
+    await issue.save();
+    res.status(200).json({ issue });
+  } catch (err) {
+    res.status(400).json({ error: 'ISSUE_UPDATE_FAILED' });
   }
 });
 

@@ -34,4 +34,28 @@ router.get('/issues/:issueId/comments', async (req, res: Response) => {
   }
 });
 
+router.delete('/comments/:id', requireAuth, async (req: AuthRequest, res: Response) => {
+  try {
+    const comment = await Comment.findById(req.params.id);
+
+    if (!comment) {
+      res.status(404).json({ error: 'COMMENT_NOT_FOUND' });
+      return;
+    }
+
+    const isAuthor = comment.author.toString() === req.user!.userId;
+    const isModerator = req.user!.role === 'moderator';
+
+    if (!isAuthor && !isModerator) {
+      res.status(403).json({ error: 'AUTH_FORBIDDEN' });
+      return;
+    }
+
+    await comment.deleteOne();
+    res.status(200).json({ message: 'COMMENT_DELETED' });
+  } catch (err) {
+    res.status(400).json({ error: 'COMMENT_DELETE_FAILED' });
+  }
+});
+
 export default router;

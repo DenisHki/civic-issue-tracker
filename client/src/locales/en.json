@@ -10,6 +10,11 @@
     "postComment": "Post",
     "loginToComment": "Log in to comment",
     "changeStatus": "Status:",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "deleteComment": "Delete",
+    "deleteCommentConfirm": "Delete this comment?",
     "deleteIssue": "Delete issue",
     "deleteConfirm": "Delete this issue? This cannot be undone.",
     "status": {
