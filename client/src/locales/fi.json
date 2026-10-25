@@ -54,6 +54,14 @@
   "issues": {
     "title": "Ilmoitetut ongelmat",
     "empty": "Ei vielä ilmoitettuja ongelmia.",
-    "loading": "Ladataan ilmoituksia..."
+    "loading": "Ladataan ilmoituksia...",
+    "filters": {
+      "search": "Hae ilmoituksia...",
+      "municipality": "Kunta",
+      "allCategories": "Kaikki kategoriat",
+      "allStatuses": "Kaikki tilat",
+      "clear": "Tyhjennä suodattimet",
+      "noResults": "Hakuehdoilla ei löytynyt ilmoituksia."
+    }
   }
 }

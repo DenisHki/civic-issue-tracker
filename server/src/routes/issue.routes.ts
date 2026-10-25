@@ -7,6 +7,10 @@ import { Comment } from '../models/Comment.model';
 
 const router = Router();
 
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 router.post('/issues', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
     const { title, description, category, location, municipality } = req.body;
@@ -26,9 +30,26 @@ router.post('/issues', requireAuth, async (req: AuthRequest, res: Response) => {
   }
 });
 
-router.get('/issues', async (_req, res: Response) => {
+router.get('/issues', async (req, res: Response) => {
   try {
-    const issues = await Issue.find().sort({ createdAt: -1 });
+    const { municipality, category, status, q } = req.query;
+    const query = Issue.find().sort({ createdAt: -1 });
+
+    if (typeof municipality === 'string' && municipality.trim()) {
+      query.where('municipality').regex(new RegExp(`^${escapeRegex(municipality.trim())}$`, 'i'));
+    }
+    if (typeof category === 'string' && category) {
+      query.where('category').equals(category);
+    }
+    if (typeof status === 'string' && status) {
+      query.where('status').equals(status);
+    }
+    if (typeof q === 'string' && q.trim()) {
+      const pattern = new RegExp(escapeRegex(q.trim()), 'i');
+      query.or([{ title: pattern }, { description: pattern }]);
+    }
+
+    const issues = await query;
     res.status(200).json({ issues });
   } catch (err) {
     res.status(500).json({ error: 'ISSUE_LIST_FAILED' });
