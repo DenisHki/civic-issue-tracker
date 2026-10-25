@@ -54,6 +54,14 @@
   "issues": {
     "title": "Reported Issues",
     "empty": "No issues reported yet.",
-    "loading": "Loading issues..."
+    "loading": "Loading issues...",
+    "filters": {
+      "search": "Search issues...",
+      "municipality": "Municipality",
+      "allCategories": "All categories",
+      "allStatuses": "All statuses",
+      "clear": "Clear filters",
+      "noResults": "No issues match your filters."
+    }
   }
 }
