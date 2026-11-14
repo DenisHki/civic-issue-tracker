@@ -3,7 +3,6 @@ const BASE_URL = 'https://palautteet.hel.fi/public-api/open311-public-service/v1
 export type OfficialCategory = 'pothole' | 'streetlight' | 'graffiti' | 'waste' | 'other';
 export type OfficialStatus = 'reported' | 'in_progress' | 'resolved';
 
-
 export interface OfficialIssue {
   id: string;
   source: 'helsinki';
