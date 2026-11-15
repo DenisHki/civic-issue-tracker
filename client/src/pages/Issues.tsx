@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
-import { IssueMap } from '../components/IssueMap';
+import { IssueMap, type OfficialIssue } from '../components/IssueMap'; // NEW: OfficialIssue
 import { useTranslation } from 'react-i18next';
 
 interface Issue {
@@ -24,6 +24,10 @@ interface Filters {
 
 const EMPTY_FILTERS: Filters = { q: '', municipality: '', category: '', status: '' };
 
+// official data from Helsinki
+const HELSINKI_CENTER = { lat: 60.1699, lng: 24.9384 };
+const OFFICIAL_RADIUS_KM = 2;
+
 // Maps a category value from the backend to its translation key.
 const CATEGORY_KEYS: Record<string, string> = {
   pothole: 'issueForm.categoryPothole',
@@ -43,7 +47,13 @@ export function Issues() {
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
   const [applied, setApplied] = useState<Filters>(EMPTY_FILTERS);
 
-  // Debounce 
+  // official layer
+  const [showOfficial, setShowOfficial] = useState(false);
+  const [officialIssues, setOfficialIssues] = useState<OfficialIssue[]>([]);
+  const [officialLoading, setOfficialLoading] = useState(false);
+  const [officialError, setOfficialError] = useState(false);
+
+  // Debounce
   useEffect(() => {
     const timer = setTimeout(() => setApplied(filters), 400);
     return () => clearTimeout(timer);
@@ -73,11 +83,46 @@ export function Issues() {
     };
   }, [applied]);
 
+  // load the official reports when the switch is turned on
+  useEffect(() => {
+    if (!showOfficial) return;
+    let cancelled = false;
+
+    api
+      .get('/official-issues', {
+        params: {
+          lat: HELSINKI_CENTER.lat,
+          lng: HELSINKI_CENTER.lng,
+          radius: OFFICIAL_RADIUS_KM,
+        },
+      })
+      .then((res) => {
+        if (!cancelled) setOfficialIssues(res.data.issues);
+      })
+      .catch(() => {
+        if (!cancelled) setOfficialError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setOfficialLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showOfficial]);
+
   function updateFilter(field: keyof Filters, value: string) {
     setFilters((prev) => ({ ...prev, [field]: value }));
   }
 
+  function toggleOfficial(checked: boolean) {
+    setShowOfficial(checked);
+    setOfficialLoading(checked);
+    setOfficialError(false);
+  }
+
   const hasFilters = Object.values(filters).some((v) => v !== '');
+  const visibleOfficial = showOfficial ? officialIssues : [];
   const inputClass =
     'w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
 
@@ -136,11 +181,47 @@ export function Issues() {
         )}
       </div>
 
+      <div className="space-y-1">
+        <label className="flex flex-wrap items-center gap-2 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            checked={showOfficial}
+            onChange={(e) => toggleOfficial(e.target.checked)}
+          />
+          {t('issues.official.toggle')}
+          <span className="text-slate-400">({t('issues.official.hint')})</span>
+        </label>
+        {showOfficial && (
+          <p className="text-xs text-slate-500">
+            {officialLoading
+              ? t('issues.official.loading')
+              : officialError
+                ? t('issues.official.error')
+                : t('issues.official.shown', { total: officialIssues.length })}
+          </p>
+        )}
+      </div>
+
       {loading ? (
         <p className="text-slate-600">{t('issues.loading')}</p>
       ) : (
         <>
-          <IssueMap issues={issues} />
+          <IssueMap issues={issues} officialIssues={visibleOfficial} />
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+            <span className="flex items-center gap-1">
+              <span className="inline-block h-3 w-3 rounded-full bg-blue-500" />
+              {t('issues.official.legendMine')}
+            </span>
+            {showOfficial && (
+              <>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-3 w-3 rounded-full bg-amber-500" />
+                  {t('issues.official.legendOfficial')}
+                </span>
+                <span>{t('issues.official.attribution')}</span>
+              </>
+            )}
+          </div>
 
           {issues.length === 0 && (
             <p className="text-slate-500">
