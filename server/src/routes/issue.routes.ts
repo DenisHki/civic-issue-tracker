@@ -1,182 +1,30 @@
-import { Router, Response } from 'express';
-import { Issue } from '../models/Issue.model';
-import { requireAuth, AuthRequest } from '../middleware/auth.middleware';
-import { requireRole } from '../middleware/auth.middleware';
-import { Types } from 'mongoose';
-import { Comment } from '../models/Comment.model';
+import { Router } from 'express';
+import { requireAuth, requireRole } from '../middleware/auth.middleware';
+import {
+  createIssue,
+  listIssues,
+  getIssue,
+  updateIssueStatus,
+  deleteIssue,
+  toggleUpvote,
+  updateIssue,
+} from '../controllers/issue.controller';
 
 const router = Router();
 
-function escapeRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+// Public
+router.get('/issues', listIssues);
+router.get('/issues/:id', getIssue);
 
-router.post('/issues', requireAuth, async (req: AuthRequest, res: Response) => {
-  try {
-    const { title, description, category, location, municipality } = req.body;
+// Any logged-in user
+router.post('/issues', requireAuth, createIssue);
+router.post('/issues/:id/upvote', requireAuth, toggleUpvote);
 
-    const issue = await Issue.create({
-      title,
-      description,
-      category,
-      location,
-      municipality,
-      reportedBy: req.user!.userId,
-    });
+// Owner or moderator
+router.patch('/issues/:id', requireAuth, updateIssue);
+router.delete('/issues/:id', requireAuth, deleteIssue);
 
-    res.status(201).json({ issue });
-  } catch (err) {
-    res.status(400).json({ error: 'ISSUE_CREATE_FAILED' });
-  }
-});
-
-router.get('/issues', async (req, res: Response) => {
-  try {
-    const { municipality, category, status, q } = req.query;
-    const query = Issue.find().sort({ createdAt: -1 });
-
-    if (typeof municipality === 'string' && municipality.trim()) {
-      query.where('municipality').regex(new RegExp(`^${escapeRegex(municipality.trim())}$`, 'i'));
-    }
-    if (typeof category === 'string' && category) {
-      query.where('category').equals(category);
-    }
-    if (typeof status === 'string' && status) {
-      query.where('status').equals(status);
-    }
-    if (typeof q === 'string' && q.trim()) {
-      const pattern = new RegExp(escapeRegex(q.trim()), 'i');
-      query.or([{ title: pattern }, { description: pattern }]);
-    }
-
-    const issues = await query;
-    res.status(200).json({ issues });
-  } catch (err) {
-    res.status(500).json({ error: 'ISSUE_LIST_FAILED' });
-  }
-});
-
-router.get('/issues/:id', async (req, res: Response) => {
-  try {
-    const issue = await Issue.findById(req.params.id);
-
-    if (!issue) {
-      res.status(404).json({ error: 'ISSUE_NOT_FOUND' });
-      return;
-    }
-
-    res.status(200).json({ issue });
-  } catch (err) {
-    res.status(400).json({ error: 'ISSUE_INVALID_ID' });
-  }
-});
-
-router.patch(
-  '/issues/:id/status',
-  requireAuth,
-  requireRole('moderator'),
-  async (req: AuthRequest, res: Response) => {
-    try {
-      const { status } = req.body;
-
-      const issue = await Issue.findByIdAndUpdate(
-        req.params.id,
-        { status },
-        { returnDocument: 'after', runValidators: true },
-      );
-
-      if (!issue) {
-        res.status(404).json({ error: 'ISSUE_NOT_FOUND' });
-        return;
-      }
-
-      res.status(200).json({ issue });
-    } catch (err) {
-      res.status(400).json({ error: 'ISSUE_STATUS_UPDATE_FAILED' });
-    }
-  },
-);
-
-router.delete('/issues/:id', requireAuth, async (req: AuthRequest, res: Response) => {
-  try {
-    const issue = await Issue.findById(req.params.id);
-
-    if (!issue) {
-      res.status(404).json({ error: 'ISSUE_NOT_FOUND' });
-      return;
-    }
-
-    const isOwner = issue.reportedBy.toString() === req.user!.userId;
-    const isModerator = req.user!.role === 'moderator';
-
-    if (!isOwner && !isModerator) {
-      res.status(403).json({ error: 'AUTH_FORBIDDEN' });
-      return;
-    }
-
-    await Comment.deleteMany({ issue: issue._id });
-    await issue.deleteOne();
-
-    res.status(200).json({ message: 'ISSUE_DELETED' });
-  } catch (err) {
-    res.status(400).json({ error: 'ISSUE_DELETE_FAILED' });
-  }
-});
-
-router.post('/issues/:id/upvote', requireAuth, async (req: AuthRequest, res: Response) => {
-  try {
-    const issue = await Issue.findById(req.params.id);
-
-    if (!issue) {
-      res.status(404).json({ error: 'ISSUE_NOT_FOUND' });
-      return;
-    }
-
-    const userId = req.user!.userId;
-    const alreadyUpvoted = issue.upvotedBy.some((id) => id.toString() === userId);
-
-    if (alreadyUpvoted) {
-      issue.upvotedBy = issue.upvotedBy.filter((id) => id.toString() !== userId);
-      issue.upvoteCount -= 1;
-    } else {
-      issue.upvotedBy.push(new Types.ObjectId(userId));
-      issue.upvoteCount += 1;
-    }
-
-    await issue.save();
-    res.status(200).json({ issue });
-  } catch (err) {
-    res.status(400).json({ error: 'ISSUE_UPVOTE_FAILED' });
-  }
-});
-
-router.patch('/issues/:id', requireAuth, async (req: AuthRequest, res: Response) => {
-  try {
-    const issue = await Issue.findById(req.params.id);
-
-    if (!issue) {
-      res.status(404).json({ error: 'ISSUE_NOT_FOUND' });
-      return;
-    }
-
-    const isOwner = issue.reportedBy.toString() === req.user!.userId;
-    const isModerator = req.user!.role === 'moderator';
-
-    if (!isOwner && !isModerator) {
-      res.status(403).json({ error: 'AUTH_FORBIDDEN' });
-      return;
-    }
-
-    const { title, description, category } = req.body;
-    if (title !== undefined) issue.title = title;
-    if (description !== undefined) issue.description = description;
-    if (category !== undefined) issue.category = category;
-
-    await issue.save();
-    res.status(200).json({ issue });
-  } catch (err) {
-    res.status(400).json({ error: 'ISSUE_UPDATE_FAILED' });
-  }
-});
+// Moderator only
+router.patch('/issues/:id/status', requireAuth, requireRole('moderator'), updateIssueStatus);
 
 export default router;
