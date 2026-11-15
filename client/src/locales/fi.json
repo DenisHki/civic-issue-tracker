@@ -62,6 +62,16 @@
       "allStatuses": "Kaikki tilat",
       "clear": "Tyhjennä suodattimet",
       "noResults": "Hakuehdoilla ei löytynyt ilmoituksia."
+    },
+    "official": {
+      "toggle": "Näytä kaupungin viralliset ilmoitukset",
+      "hint": "Helsingin keskusta",
+      "loading": "Ladataan virallisia ilmoituksia...",
+      "error": "Viralliset ilmoitukset eivät ole juuri nyt saatavilla.",
+      "shown": "{{total}} virallista ilmoitusta näkyvissä",
+      "attribution": "Lähde: Helsingin kaupungin Open311-rajapinta (CC BY 4.0)",
+      "legendMine": "Asukkaiden ilmoitukset",
+      "legendOfficial": "Viralliset ilmoitukset"
     }
   }
 }

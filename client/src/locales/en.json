@@ -62,6 +62,16 @@
       "allStatuses": "All statuses",
       "clear": "Clear filters",
       "noResults": "No issues match your filters."
+    },
+    "official": {
+      "toggle": "Show official city reports",
+      "hint": "central Helsinki",
+      "loading": "Loading official reports...",
+      "error": "Official reports are unavailable right now.",
+      "shown": "{{total}} official reports shown",
+      "attribution": "Source: City of Helsinki Open311 (CC BY 4.0)",
+      "legendMine": "Citizen reports",
+      "legendOfficial": "Official reports"
     }
   }
 }
