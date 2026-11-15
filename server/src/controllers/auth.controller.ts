@@ -8,12 +8,13 @@ export async function login(req: Request, res: Response): Promise<void> {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       res.status(400).json({ error: 'AUTH_MISSING_FIELDS' });
       return;
     }
 
     const user = await User.findOne({ email });
+
     if (!user) {
       res.status(401).json({ error: 'AUTH_INVALID_CREDENTIALS' });
       return;
@@ -41,7 +42,14 @@ export async function register(req: Request, res: Response): Promise<void> {
   try {
     const { email, password, municipality } = req.body;
 
-    if (!email || !password || !municipality) {
+    if (
+      typeof email !== 'string' ||
+      typeof password !== 'string' ||
+      typeof municipality !== 'string' ||
+      !email ||
+      !password ||
+      !municipality
+    ) {
       res.status(400).json({ error: 'AUTH_MISSING_FIELDS' });
       return;
     }
