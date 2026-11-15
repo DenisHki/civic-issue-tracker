@@ -7,6 +7,7 @@ import healthRoutes from './routes/health.routes';
 import authRoutes from './routes/auth.routes';
 import issueRoutes from './routes/issue.routes';
 import commentRoutes from './routes/comment.routes';
+import officialRoutes from './routes/official.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -17,7 +18,7 @@ export function createApp(): Application {
   if (env.nodeEnv !== 'test') {
     app.use(morgan('dev'));
   }
-
+  app.use('/api', officialRoutes);
   app.use('/api', healthRoutes);
   app.use('/api', issueRoutes);
   app.use('/api', authRoutes);

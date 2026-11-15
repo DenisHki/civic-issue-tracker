@@ -43,7 +43,7 @@ export function Issues() {
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
   const [applied, setApplied] = useState<Filters>(EMPTY_FILTERS);
 
-  // Debounce
+  // Debounce 
   useEffect(() => {
     const timer = setTimeout(() => setApplied(filters), 400);
     return () => clearTimeout(timer);
