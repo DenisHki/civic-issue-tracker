@@ -37,7 +37,13 @@
     "categoryOther": "Muu",
     "submit": "Lähetä ilmoitus",
     "errorNoLocation": "Valitse sijainti klikkaamalla karttaa",
-    "errorFailed": "Ilmoituksen luominen epäonnistui"
+    "errorFailed": "Ilmoituksen luominen epäonnistui",
+    "nearby": {
+      "title": "Kaupunki saattaa jo tietää tästä",
+      "intro": "Viralliset ilmoitukset noin 100 metrin säteellä valitusta paikasta:",
+      "meters": "{{m}} m päässä",
+      "source": "Lähde: Helsingin kaupungin Open311-rajapinta (CC BY 4.0)"
+    }
   },
   "nav": {
     "title": "Kuntalaisen vikailmoitus",

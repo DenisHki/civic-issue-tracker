@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -7,6 +7,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { api } from '../lib/api';
+import type { OfficialIssue } from '../components/IssueMap';
 
 const defaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -15,6 +16,8 @@ const defaultIcon = L.icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
+
+const NEARBY_RADIUS_KM = 0.1;
 
 function LocationPicker({ onPick }: { onPick: (lat: number, lng: number) => void }) {
   useMapEvents({
@@ -32,8 +35,50 @@ export function NewIssue() {
   const [category, setCategory] = useState('pothole');
   const [municipality, setMunicipality] = useState('');
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [nearby, setNearby] = useState<OfficialIssue[]>([]);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  function pickLocation(lat: number, lng: number) {
+    setLocation({ lat, lng });
+    setNearby([]);
+  }
+
+  useEffect(() => {
+    if (!location) return;
+    let cancelled = false;
+
+    api
+      .get('/official-issues', {
+        params: { lat: location.lat, lng: location.lng, radius: NEARBY_RADIUS_KM },
+      })
+      .then((res) => {
+        if (!cancelled) setNearby(res.data.issues);
+      })
+      .catch(() => {
+        if (!cancelled) setNearby([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location]);
+
+  // 3 closest reports
+  const nearbyShown = location
+    ? nearby
+        .map((issue) => ({
+          issue,
+          meters: Math.round(
+            L.latLng(location.lat, location.lng).distanceTo([
+              issue.location.lat,
+              issue.location.lng,
+            ]),
+          ),
+        }))
+        .sort((a, b) => a.meters - b.meters)
+        .slice(0, 3)
+    : [];
 
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -121,9 +166,30 @@ export function NewIssue() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <LocationPicker onPick={(lat, lng) => setLocation({ lat, lng })} />
+            <LocationPicker onPick={pickLocation} />
             {location && <Marker position={[location.lat, location.lng]} icon={defaultIcon} />}
           </MapContainer>
+
+          {nearbyShown.length > 0 && (
+            <div className="mt-2 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-slate-700">
+              <p className="font-medium text-amber-900">{t('issueForm.nearby.title')}</p>
+              <p className="text-xs text-slate-600">{t('issueForm.nearby.intro')}</p>
+              <ul className="mt-2 space-y-2">
+                {nearbyShown.map(({ issue, meters }) => (
+                  <li key={issue.id}>
+                    <span className="font-medium">{issue.title}</span>
+                    <span className="text-xs text-slate-500">
+                      {' '}
+                      · {t('issueForm.nearby.meters', { m: meters })} ·{' '}
+                      {t(`issueDetail.status.${issue.status}`)}
+                    </span>
+                    <p className="text-xs text-slate-600">{issue.description}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs text-slate-500">{t('issueForm.nearby.source')}</p>
+            </div>
+          )}
         </div>
 
         <button
