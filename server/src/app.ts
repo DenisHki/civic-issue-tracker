@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes';
 import issueRoutes from './routes/issue.routes';
 import commentRoutes from './routes/comment.routes';
 import officialRoutes from './routes/official.routes';
+import statsRoutes from './routes/stats.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -19,6 +20,7 @@ export function createApp(): Application {
     app.use(morgan('dev'));
   }
   app.use('/api', officialRoutes);
+  app.use('/api', statsRoutes);
   app.use('/api', healthRoutes);
   app.use('/api', issueRoutes);
   app.use('/api', authRoutes);

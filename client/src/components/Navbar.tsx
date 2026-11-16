@@ -1,117 +1,155 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/auth-context';
+import { Button, ButtonLink } from './Button';
+import { useToast } from '../context/toast-context';
+
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+    isActive ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100'
+  }`;
 
 export function Navbar() {
   const { user, logout } = useAuth();
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
+  const { showToast } = useToast();
 
   function closeMenu() {
     setOpen(false);
+  }
+
+  function handleLogout() {
+    logout();
+    showToast(t('toast.loggedOut'));
+    closeMenu();
   }
 
   function toggleLanguage() {
     i18n.changeLanguage(i18n.language === 'en' ? 'fi' : 'en');
   }
 
+  const languageLabel = i18n.language === 'en' ? 'EN' : 'FI';
+
+  const roleBadge = user && (
+    <span
+      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+        user.role === 'moderator' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+      }`}
+    >
+      {user.role}
+    </span>
+  );
+
   return (
-    <nav className="bg-white border-b border-slate-200 px-6 py-3">
-      <div className="flex items-center justify-between">
-        <Link to="/" onClick={closeMenu} className="font-semibold text-slate-800">
+    <nav className="sticky top-0 z-1100 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
+        <Link
+          to="/"
+          onClick={closeMenu}
+          className="flex items-center gap-2 font-semibold text-slate-800"
+        >
+          <span aria-hidden="true">📍</span>
           {t('nav.title')}
         </Link>
 
-        <div className="hidden sm:flex items-center gap-4 text-sm">
-          <Link to="/issues" className="text-slate-600 hover:text-blue-600">
+        {/* Desktop menu */}
+        <div className="hidden items-center gap-2 sm:flex">
+          <NavLink to="/" end className={navLinkClass}>
+            {t('nav.home')}
+          </NavLink>
+          <NavLink to="/issues" end className={navLinkClass}>
             {t('nav.issues')}
-          </Link>
-          {user && (
-            <Link to="/issues/new" className="text-slate-600 hover:text-blue-600">
-              {t('nav.reportIssue')}
-            </Link>
-          )}
+          </NavLink>
           {user ? (
             <>
-              <span className="text-slate-500">({user.role})</span>
-              <button onClick={logout} className="text-blue-600 hover:underline">
+              <NavLink to="/issues/new" className={navLinkClass}>
+                {t('nav.reportIssue')}
+              </NavLink>
+              {roleBadge}
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
                 {t('nav.logout')}
-              </button>
+              </Button>
             </>
           ) : (
             <>
-              <Link to="/login" className="text-blue-600 hover:underline">
+              <ButtonLink to="/login" variant="ghost" size="sm">
                 {t('nav.login')}
-              </Link>
-              <Link to="/register" className="text-blue-600 hover:underline">
+              </ButtonLink>
+              <ButtonLink to="/register" variant="ghost" size="sm">
                 {t('nav.register')}
-              </Link>
+              </ButtonLink>
             </>
           )}
-          <button
-            onClick={toggleLanguage}
-            className="border border-slate-300 rounded px-2 py-1 text-xs font-medium text-slate-600"
-          >
-            {i18n.language === 'en' ? 'FI' : 'EN'}
-          </button>
+          <Button variant="secondary" size="sm" onClick={toggleLanguage}>
+            {languageLabel}
+          </Button>
         </div>
 
-        <button
+        {/* Mobile menu button */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="sm:hidden"
           onClick={() => setOpen(!open)}
-          className="sm:hidden text-slate-600"
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
           {open ? '✕' : '☰'}
-        </button>
+        </Button>
       </div>
 
+      {/* Mobile menu */}
       {open && (
-        <div className="sm:hidden mt-3 flex flex-col gap-3 text-sm pb-2">
-          <Link to="/issues" onClick={closeMenu} className="text-slate-600 hover:text-blue-600">
+        <div className="flex flex-col gap-2 border-t border-slate-100 px-4 pb-4 pt-3 sm:hidden">
+          <NavLink to="/" end onClick={closeMenu} className={navLinkClass}>
+            {t('nav.home')}
+          </NavLink>
+          <NavLink to="/issues" end onClick={closeMenu} className={navLinkClass}>
             {t('nav.issues')}
-          </Link>
-          {user && (
-            <Link
-              to="/issues/new"
-              onClick={closeMenu}
-              className="text-slate-600 hover:text-blue-600"
-            >
-              {t('nav.reportIssue')}
-            </Link>
-          )}
+          </NavLink>
           {user ? (
             <>
-              <span className="text-slate-500">({user.role})</span>
-              <button
-                onClick={() => {
-                  logout();
-                  closeMenu();
-                }}
-                className="text-blue-600 hover:underline text-left"
-              >
-                {t('nav.logout')}
-              </button>
+              <NavLink to="/issues/new" onClick={closeMenu} className={navLinkClass}>
+                {t('nav.reportIssue')}
+              </NavLink>
+              <div className="flex items-center justify-between">
+                {roleBadge}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    logout();
+                    closeMenu();
+                  }}
+                >
+                  {t('nav.logout')}
+                </Button>
+              </div>
             </>
           ) : (
             <>
-              <Link to="/login" onClick={closeMenu} className="text-blue-600 hover:underline">
+              <ButtonLink to="/login" variant="secondary" onClick={closeMenu} className="w-full">
                 {t('nav.login')}
-              </Link>
-              <Link to="/register" onClick={closeMenu} className="text-blue-600 hover:underline">
+              </ButtonLink>
+              <ButtonLink to="/register" variant="secondary" onClick={closeMenu} className="w-full">
+                {' '}
                 {t('nav.register')}
-              </Link>
+              </ButtonLink>
             </>
           )}
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
+            className="self-start"
             onClick={() => {
               toggleLanguage();
               closeMenu();
             }}
-            className="border border-slate-300 rounded px-2 py-1 text-xs font-medium text-slate-600 self-start"
           >
-            {i18n.language === 'en' ? 'FI' : 'EN'}
-          </button>
+            {languageLabel}
+          </Button>
         </div>
       )}
     </nav>

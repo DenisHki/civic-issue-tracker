@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
 import { useAuth } from '../context/auth-context';
+import { useToast } from '../context/toast-context';
+import { Button } from '../components/Button';
 
 export function Register() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [municipality, setMunicipality] = useState('');
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.SyntheticEvent) {
@@ -17,61 +22,63 @@ export function Register() {
     try {
       await api.post('/auth/register', { email, password, municipality });
       await login(email, password);
+      showToast(t('toast.registered'));
       navigate('/');
     } catch {
-      setError('Registration failed. Email may already be in use.');
+      setError(t('authForm.registerError'));
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+    <div className="flex justify-center px-4 py-12">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm space-y-4"
+        className="w-full max-w-sm space-y-4 rounded-xl border border-slate-200 bg-white p-8 shadow-sm"
       >
-        <h1 className="text-xl font-semibold text-slate-800">Create account</h1>
+        <h1 className="text-xl font-semibold text-slate-800">{t('authForm.registerTitle')}</h1>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
         <div>
-          <label className="block text-sm font-medium text-slate-700">Email</label>
+          <label className="block text-sm font-medium text-slate-700">{t('authForm.email')}</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="mt-1 w-full border border-slate-300 rounded-md px-3 py-2"
+            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700">Password</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t('authForm.password')}
+          </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="mt-1 w-full border border-slate-300 rounded-md px-3 py-2"
+            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700">Municipality</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t('authForm.municipality')}
+          </label>
           <input
             type="text"
             value={municipality}
             onChange={(e) => setMunicipality(e.target.value)}
             required
-            className="mt-1 w-full border border-slate-300 rounded-md px-3 py-2"
+            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700"
-        >
-          Create account
-        </button>
+        <Button type="submit" className="w-full">
+          {t('authForm.registerSubmit')}
+        </Button>
       </form>
     </div>
   );

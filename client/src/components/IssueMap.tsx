@@ -4,6 +4,8 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { categoryLabel } from '../lib/categories';
 
 const defaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -49,16 +51,17 @@ interface IssueMapProps {
 }
 
 export function IssueMap({ issues, officialIssues = [] }: IssueMapProps) {
-  const fallbackCenter: [number, number] = [61.0587, 28.1887]; // Lappeenranta
+  const fallbackCenter: [number, number] = [60.1699, 24.9384]; // Helsinki
+
+  const { t } = useTranslation();
 
   return (
-    <MapContainer center={fallbackCenter} zoom={6} className="h-96 w-full rounded-lg">
-            <FitBounds points={officialIssues.length > 0 ? officialIssues : issues} />
+    <MapContainer center={fallbackCenter} zoom={11} className="h-96 w-full rounded-lg">
+      <FitBounds points={officialIssues.length > 0 ? officialIssues : issues} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-
       {issues.map((issue) => (
         <Marker
           key={issue._id}
@@ -68,11 +71,10 @@ export function IssueMap({ issues, officialIssues = [] }: IssueMapProps) {
           <Popup>
             <strong>{issue.title}</strong>
             <br />
-            {issue.category} · {issue.status}
+            {categoryLabel(t, issue.category)} · {t(`issueDetail.status.${issue.status}`)}
           </Popup>
         </Marker>
       ))}
-
       {officialIssues.map((issue) => (
         <CircleMarker
           key={issue.id}
@@ -86,7 +88,8 @@ export function IssueMap({ issues, officialIssues = [] }: IssueMapProps) {
             {issue.description}
             <br />
             <em>
-              Official report · City of Helsinki · {issue.category} · {issue.status}
+              {t('mapPopup.officialSource')} · {categoryLabel(t, issue.category)} ·{' '}
+              {t(`issueDetail.status.${issue.status}`)}
             </em>
           </Popup>
         </CircleMarker>

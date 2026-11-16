@@ -1,4 +1,33 @@
 {
+  "landing": {
+    "badge": "Suomen kunnat · Suomi / English",
+    "titleLine1": "Ilmoita. Seuraa.",
+    "titleLine2": "Saa korjattua.",
+    "subtitle": "Ilmoita kuopista, rikkinäisistä katuvaloista ja muista paikallisista ongelmista, tue sinulle tärkeitä ilmoituksia ja katso, mitä kaupunki jo tietää.",
+    "loginHint": "Kirjaudu sisään tai rekisteröidy ilmoittaaksesi ongelmasta.",
+    "stats": {
+      "total": "Kaikki ilmoitukset",
+      "reported": "Ilmoitettu",
+      "in_progress": "Työn alla",
+      "resolved": "Ratkaistu"
+    },
+    "howTitle": "Näin se toimii",
+    "steps": {
+      "reportTitle": "1. Ilmoita",
+      "reportText": "Merkitse ongelma kartalle ja kuvaile se minuutissa.",
+      "discussTitle": "2. Tue ja keskustele",
+      "discussText": "Naapurit äänestävät ja kommentoivat, jolloin tärkeimmät ongelmat nousevat esiin.",
+      "followTitle": "3. Seuraa etenemistä",
+      "followText": "Moderaattorit päivittävät tilan ilmoitetusta ratkaistuun."
+    },
+    "latestTitle": "Uusimmat ilmoitukset",
+    "seeAll": "Näytä kaikki",
+    "latestEmpty": "Ei vielä ilmoituksia.",
+    "officialTitle": "Yhdistetty kaupungin viralliseen dataan",
+    "officialText": "Helsingin kaupungin ilmoitukset näkyvät kartalla oranssina. Kun ilmoitat jostain, tarkistamme, tietääkö kaupunki asiasta jo.",
+    "footer": "Civic Issue Tracker · LUT Full Stack -kurssin projekti",
+    "footerData": "Virallinen data: Helsingin kaupungin Open311 (CC BY 4.0)"
+  },
   "loginToUpvote": "Kirjaudu sisään äänestääksesi",
   "issueDetail": {
     "backToList": "← Takaisin ilmoituksiin",
@@ -47,6 +76,7 @@
   },
   "nav": {
     "title": "Kuntalaisen vikailmoitus",
+    "home": "Etusivu",
     "issues": "Ilmoitukset",
     "reportIssue": "Tee ilmoitus",
     "login": "Kirjaudu sisään",
@@ -79,5 +109,30 @@
       "legendMine": "Asukkaiden ilmoitukset",
       "legendOfficial": "Viralliset ilmoitukset"
     }
+  },
+  "toast": {
+    "loggedIn": "Kirjauduit sisään",
+    "loggedOut": "Kirjauduit ulos",
+    "registered": "Tili luotu. Tervetuloa!",
+    "issueCreated": "Ilmoitus lähetetty. Kiitos!"
+  },
+  "authForm": {
+    "loginTitle": "Kirjaudu sisään",
+    "registerTitle": "Luo tili",
+    "email": "Sähköposti",
+    "password": "Salasana",
+    "municipality": "Kunta",
+    "loginSubmit": "Kirjaudu sisään",
+    "registerSubmit": "Luo tili",
+    "loginError": "Virheellinen sähköposti tai salasana",
+    "registerError": "Rekisteröityminen epäonnistui. Sähköposti voi olla jo käytössä."
+  },
+  "notFound": {
+    "title": "Sivua ei löytynyt",
+    "text": "Etsimääsi sivua ei ole olemassa.",
+    "back": "Takaisin etusivulle"
+  },
+  "mapPopup": {
+    "officialSource": "Virallinen ilmoitus · Helsingin kaupunki"
   }
 }

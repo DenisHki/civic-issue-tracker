@@ -8,6 +8,8 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { api } from '../lib/api';
 import type { OfficialIssue } from '../components/IssueMap';
+import { useToast } from '../context/toast-context';
+import { Button } from '../components/Button';
 
 const defaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -30,6 +32,8 @@ function LocationPicker({ onPick }: { onPick: (lat: number, lng: number) => void
 
 export function NewIssue() {
   const { t } = useTranslation();
+  const { showToast } = useToast();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('pothole');
@@ -91,6 +95,7 @@ export function NewIssue() {
 
     try {
       await api.post('/issues', { title, description, category, municipality, location });
+      showToast(t('toast.issueCreated'));
       navigate('/issues');
     } catch {
       setError(t('issueForm.errorFailed'));
@@ -192,12 +197,9 @@ export function NewIssue() {
           )}
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700"
-        >
+        <Button type="submit" className="w-full">
           {t('issueForm.submit')}
-        </button>
+        </Button>
       </form>
     </div>
   );
