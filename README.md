@@ -1,41 +1,35 @@
-# Civic Issue Tracker
+```mermaid
+flowchart LR
+    subgraph Clients["Clients"]
+        Browser["Web browser<br/>(desktop and mobile)"]
+        ApiTool["API tools<br/>(e.g. Postman)"]
+    end
 
-Let residents of Finnish municipalities create accounts, report and track local
-infrastructure issues (potholes, broken streetlights, etc.), upvote and comment
-on existing reports, and see status updates from moderators — all mapped to
-their municipality, and cross-referenced against official open municipal data
-on planned maintenance.
+    subgraph Render["Render (hosting)"]
+        Static["Static Site<br/>React + Vite + TypeScript"]
 
-## Monorepo layout
-civic-issue-tracker/
-├── client/ React + Vite + TypeScript + Tailwind CSS frontend (Finnish + English)
-├── server/ Node.js + Express + TypeScript + MongoDB backend
-└── .github/ CI/CD workflows
+        subgraph Api["Web Service: Express API (Node.js + TypeScript)"]
+            Routes["Routes<br/>URL to controller"]
+            Middleware["Middleware<br/>JWT auth, roles"]
+            Controllers["Controllers<br/>HTTP logic"]
+            Models["Models<br/>Mongoose schemas"]
+            Services["Services<br/>Helsinki Open311 adapter<br/>mapper + 5 min cache"]
+            Routes --> Middleware --> Controllers
+            Controllers --> Models
+            Controllers --> Services
+        end
+    end
 
+    Atlas[("MongoDB Atlas")]
+    Helsinki["Helsinki Open311 API<br/>(City of Helsinki, CC BY 4.0)"]
+    Tiles["OpenStreetMap<br/>map tiles"]
 
-## Tech stack
+    Browser -->|"1. loads the app (HTTPS)"| Static
+    Browser -->|"2. REST + JSON, JWT in header"| Routes
+    ApiTool -->|"REST + JSON"| Routes
+    Browser -->|"map tiles"| Tiles
+    Models -->|"queries"| Atlas
+    Services -->|"HTTPS GET, 5 s timeout"| Helsinki
 
-- **Frontend:** React, Vite, TypeScript, Tailwind CSS, Leaflet (maps), react-i18next (fi/en)
-- **Backend:** Node.js, Express, TypeScript, MongoDB (Mongoose), JWT auth
-- **Testing:** Vitest + Supertest (backend), Vitest + React Testing Library (frontend)
-- **CI/CD:** GitHub Actions
-- **Deployment:** Render (separate Web Service for the API, Static Site for the client)
-
-## Status
-
-Work in progress — built step by step as a course project for LUT University's
-Full Stack Web Development course.
-
-## Getting started
-
-```bash
-npm install
-npm run dev:server   # starts the API
-npm run dev:client   # starts the frontend
+    style Atlas fill:#f9f,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
 ```
-
-Each workspace has its own `.env.example` describing required environment variables.
-
-Test as a moderator:
-resident2@example.com
-mypassword123
