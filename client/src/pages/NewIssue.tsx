@@ -200,7 +200,6 @@ export function NewIssue() {
         <Button type="submit" className="w-full">
           {t('issueForm.submit')}
         </Button>
-        
       </form>
     </div>
   );

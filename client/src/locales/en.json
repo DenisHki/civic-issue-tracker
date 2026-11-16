@@ -127,5 +127,13 @@
     "registerSubmit": "Create account",
     "loginError": "Invalid email or password",
     "registerError": "Registration failed. Email may already be in use."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist.",
+    "back": "Back to home"
+  },
+  "mapPopup": {
+    "officialSource": "Official report · City of Helsinki"
   }
 }

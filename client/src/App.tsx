@@ -8,6 +8,7 @@ import { NewIssue } from './pages/NewIssue';
 import { IssueDetail } from './pages/IssueDetail';
 import { Footer } from './components/Footer';
 import { ToastProvider } from './components/ToastProvider';
+import { NotFound } from './pages/NotFound';
 
 import './App.css';
 
@@ -24,6 +25,7 @@ function App() {
             <Route path="/issues" element={<Issues />} />
             <Route path="/issues/new" element={<NewIssue />} />
             <Route path="/issues/:id" element={<IssueDetail />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />

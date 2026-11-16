@@ -126,5 +126,13 @@
     "registerSubmit": "Luo tili",
     "loginError": "Virheellinen sähköposti tai salasana",
     "registerError": "Rekisteröityminen epäonnistui. Sähköposti voi olla jo käytössä."
+  },
+  "notFound": {
+    "title": "Sivua ei löytynyt",
+    "text": "Etsimääsi sivua ei ole olemassa.",
+    "back": "Takaisin etusivulle"
+  },
+  "mapPopup": {
+    "officialSource": "Virallinen ilmoitus · Helsingin kaupunki"
   }
 }
