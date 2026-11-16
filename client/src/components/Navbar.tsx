@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/auth-context';
 import { Button, ButtonLink } from './Button';
+import { useToast } from '../context/toast-context';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
@@ -13,9 +14,16 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
+  const { showToast } = useToast();
 
   function closeMenu() {
     setOpen(false);
+  }
+
+  function handleLogout() {
+    logout();
+    showToast(t('toast.loggedOut'));
+    closeMenu();
   }
 
   function toggleLanguage() {
@@ -60,7 +68,7 @@ export function Navbar() {
                 {t('nav.reportIssue')}
               </NavLink>
               {roleBadge}
-              <Button variant="ghost" size="sm" onClick={logout}>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
                 {t('nav.logout')}
               </Button>
             </>
@@ -69,7 +77,7 @@ export function Navbar() {
               <ButtonLink to="/login" variant="ghost" size="sm">
                 {t('nav.login')}
               </ButtonLink>
-              <ButtonLink to="/register" variant="primary" size="sm">
+              <ButtonLink to="/register" variant="ghost" size="sm">
                 {t('nav.register')}
               </ButtonLink>
             </>
@@ -125,7 +133,8 @@ export function Navbar() {
               <ButtonLink to="/login" variant="secondary" onClick={closeMenu} className="w-full">
                 {t('nav.login')}
               </ButtonLink>
-              <ButtonLink to="/register" variant="primary" onClick={closeMenu} className="w-full">
+              <ButtonLink to="/register" variant="secondary" onClick={closeMenu} className="w-full">
+                {' '}
                 {t('nav.register')}
               </ButtonLink>
             </>

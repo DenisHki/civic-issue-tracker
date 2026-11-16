@@ -109,5 +109,22 @@
       "legendMine": "Asukkaiden ilmoitukset",
       "legendOfficial": "Viralliset ilmoitukset"
     }
+  },
+  "toast": {
+    "loggedIn": "Kirjauduit sisään",
+    "loggedOut": "Kirjauduit ulos",
+    "registered": "Tili luotu. Tervetuloa!",
+    "issueCreated": "Ilmoitus lähetetty. Kiitos!"
+  },
+  "authForm": {
+    "loginTitle": "Kirjaudu sisään",
+    "registerTitle": "Luo tili",
+    "email": "Sähköposti",
+    "password": "Salasana",
+    "municipality": "Kunta",
+    "loginSubmit": "Kirjaudu sisään",
+    "registerSubmit": "Luo tili",
+    "loginError": "Virheellinen sähköposti tai salasana",
+    "registerError": "Rekisteröityminen epäonnistui. Sähköposti voi olla jo käytössä."
   }
 }

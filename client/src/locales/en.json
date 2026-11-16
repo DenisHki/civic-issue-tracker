@@ -110,5 +110,22 @@
       "legendMine": "Citizen reports",
       "legendOfficial": "Official reports"
     }
+  },
+  "toast": {
+    "loggedIn": "Logged in",
+    "loggedOut": "Logged out",
+    "registered": "Account created. Welcome!",
+    "issueCreated": "Issue reported. Thank you!"
+  },
+  "authForm": {
+    "loginTitle": "Log in",
+    "registerTitle": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "municipality": "Municipality",
+    "loginSubmit": "Log in",
+    "registerSubmit": "Create account",
+    "loginError": "Invalid email or password",
+    "registerError": "Registration failed. Email may already be in use."
   }
 }

@@ -7,25 +7,28 @@ import { Navbar } from './components/Navbar';
 import { NewIssue } from './pages/NewIssue';
 import { IssueDetail } from './pages/IssueDetail';
 import { Footer } from './components/Footer';
+import { ToastProvider } from './components/ToastProvider';
 
 import './App.css';
 
 function App() {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <Navbar />
-      <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/issues" element={<Issues />} />
-          <Route path="/issues/new" element={<NewIssue />} />
-          <Route path="/issues/:id" element={<IssueDetail />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <ToastProvider>
+      <div className="flex min-h-screen flex-col bg-slate-50">
+        <Navbar />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/issues" element={<Issues />} />
+            <Route path="/issues/new" element={<NewIssue />} />
+            <Route path="/issues/:id" element={<IssueDetail />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </ToastProvider>
   );
 }
 
