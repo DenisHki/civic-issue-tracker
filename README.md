@@ -65,7 +65,6 @@ Open <http://localhost:5173>.
 - The home page shows live numbers: all reports, and how many are reported, in progress and resolved.
 - Open **Issues** to search and filter reports by text, municipality, category and status. Click a card to open the report with its comments.
 - Turn on **Show official city reports** to see City of Helsinki reports as orange markers on the map.
-- Use the **EN | FI** switch to change the language.
 
 **As a resident**
 1. Click **Register**, enter your email, a password and your municipality. You are logged in right away.
@@ -196,7 +195,6 @@ erDiagram
 
 Official City of Helsinki reports are not stored in the database. They are fetched, mapped to our own shape and cached for 5 minutes by a separate service module on the server.
 
-More detail (the MVC layers, the Open311 integration, design decisions, security and known limitations) is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Tests and quality checks
 
