@@ -48,7 +48,9 @@ export function Navbar() {
 
         {/* Desktop menu */}
         <div className="hidden items-center gap-2 sm:flex">
-          {' '}
+          <NavLink to="/" end className={navLinkClass}>
+            {t('nav.home')}
+          </NavLink>
           <NavLink to="/issues" end className={navLinkClass}>
             {t('nav.issues')}
           </NavLink>
@@ -93,6 +95,9 @@ export function Navbar() {
       {/* Mobile menu */}
       {open && (
         <div className="flex flex-col gap-2 border-t border-slate-100 px-4 pb-4 pt-3 sm:hidden">
+          <NavLink to="/" end onClick={closeMenu} className={navLinkClass}>
+            {t('nav.home')}
+          </NavLink>
           <NavLink to="/issues" end onClick={closeMenu} className={navLinkClass}>
             {t('nav.issues')}
           </NavLink>

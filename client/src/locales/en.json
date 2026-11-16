@@ -1,4 +1,34 @@
 {
+  "landing": {
+    "badge": "Finnish municipalities · Suomi / English",
+    "titleLine1": "Report it. Track it.",
+    "titleLine2": "Get it fixed.",
+    "subtitle": "Report potholes, broken streetlights and other local problems, back the ones that matter to you, and see what the city already knows.",
+    "loginHint": "Log in or register to report an issue.",
+    "stats": {
+      "total": "All reports",
+      "reported": "Reported",
+      "in_progress": "In progress",
+      "resolved": "Resolved"
+    },
+    "howTitle": "How it works",
+    "steps": {
+      "reportTitle": "1. Report",
+      "reportText": "Pin the problem on the map and describe it in a minute.",
+      "discussTitle": "2. Back and discuss",
+      "discussText": "Neighbours upvote and comment, so the important issues rise to the top.",
+      "followTitle": "3. Follow progress",
+      "followText": "Moderators update the status from reported to resolved."
+    },
+    "latestTitle": "Latest reports",
+    "seeAll": "See all",
+    "latestEmpty": "No reports yet.",
+    "officialTitle": "Connected to official city data",
+    "officialText": "Reports from the City of Helsinki appear on the map in orange. When you report something, we check if the city already knows about it.",
+    "footer": "Civic Issue Tracker · LUT Full Stack course project",
+    "footerData": "Official data: City of Helsinki Open311 (CC BY 4.0)"
+  },
+
   "loginToUpvote": "Log in to upvote",
   "issueDetail": {
     "backToList": "← Back to issues",
@@ -47,6 +77,7 @@
   },
   "nav": {
     "title": "Civic Issue Tracker",
+    "home": "Home",
     "issues": "Issues",
     "reportIssue": "Report Issue",
     "login": "Log in",
