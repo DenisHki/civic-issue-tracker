@@ -37,7 +37,13 @@
     "categoryOther": "Other",
     "submit": "Submit Report",
     "errorNoLocation": "Please click the map to set a location",
-    "errorFailed": "Failed to create issue"
+    "errorFailed": "Failed to create issue",
+    "nearby": {
+      "title": "The city may already know about this",
+      "intro": "Official reports within about 100 m of the chosen spot:",
+      "meters": "{{m}} m away",
+      "source": "Source: City of Helsinki Open311 (CC BY 4.0)"
+    }
   },
   "nav": {
     "title": "Civic Issue Tracker",
