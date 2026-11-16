@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
 import { useAuth } from '../context/auth-context';
+import { Button, ButtonLink } from '../components/Button';
 
 interface Issue {
   _id: string;
@@ -102,12 +103,13 @@ export function IssueDetail() {
 
   const canModerate = user?.role === 'moderator';
   const canManage = user && (user.userId === issue.reportedBy || canModerate);
+  const hasUpvoted = !!user && issue.upvotedBy.includes(user.userId);
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-4">
-      <Link to="/issues" className="text-sm text-blue-600 hover:underline">
+      <ButtonLink to="/issues" variant="ghost" size="sm" className="-ml-3">
         {t('issueDetail.backToList')}
-      </Link>
+      </ButtonLink>
 
       <div className="bg-white rounded-lg shadow-sm p-5 border border-slate-200 space-y-3">
         {editing ? (
@@ -151,19 +153,12 @@ export function IssueDetail() {
               </select>
             </div>
             <div className="flex gap-2">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-blue-700"
-              >
+              <Button type="submit" variant="primary">
                 {t('issueDetail.save')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditing(false)}
-                className="border border-slate-300 text-slate-600 rounded-md px-4 py-2 text-sm"
-              >
+              </Button>
+              <Button variant="secondary" onClick={() => setEditing(false)}>
                 {t('issueDetail.cancel')}
-              </button>
+              </Button>
             </div>
           </form>
         ) : (
@@ -182,17 +177,14 @@ export function IssueDetail() {
         )}
 
         <div className="flex items-center gap-3 pt-2">
-          <button
+          <Button
+            variant={hasUpvoted ? 'active' : 'secondary'}
+            size="sm"
             onClick={handleUpvote}
             disabled={!user}
-            className={`text-sm px-3 py-1.5 rounded-md border ${
-              user && issue.upvotedBy.includes(user.userId)
-                ? 'bg-blue-50 border-blue-300 text-blue-700'
-                : 'border-slate-300 text-slate-600'
-            } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             👍 {issue.upvoteCount}
-          </button>
+          </Button>
           {!user && (
             <span className="text-xs text-slate-400">{t('issueDetail.loginToUpvote')}</span>
           )}
@@ -206,7 +198,7 @@ export function IssueDetail() {
                 <select
                   value={issue.status}
                   onChange={(e) => handleStatusChange(e.target.value)}
-                  className="border border-slate-300 rounded-md px-2 py-1 text-sm"
+                  className="border border-slate-300 rounded-md px-2 py-1.5 text-sm"
                 >
                   <option value="reported">{t('issueDetail.status.reported')}</option>
                   <option value="in_progress">{t('issueDetail.status.in_progress')}</option>
@@ -214,18 +206,17 @@ export function IssueDetail() {
                 </select>
               </label>
             )}
-            {canManage && !editing && (
-              <button onClick={startEditing} className="text-sm text-blue-600 hover:underline">
-                {t('issueDetail.edit')}
-              </button>
-            )}
             {canManage && (
-              <button
-                onClick={handleDelete}
-                className="text-sm text-red-600 hover:underline ml-auto"
-              >
-                {t('issueDetail.deleteIssue')}
-              </button>
+              <div className="ml-auto flex items-center gap-2">
+                {!editing && (
+                  <Button variant="secondary" size="sm" onClick={startEditing}>
+                    {t('issueDetail.edit')}
+                  </Button>
+                )}
+                <Button variant="danger" size="sm" onClick={handleDelete}>
+                  {t('issueDetail.deleteIssue')}
+                </Button>
+              </div>
             )}
           </div>
         )}
@@ -249,12 +240,13 @@ export function IssueDetail() {
                   {new Date(comment.createdAt).toLocaleString()}
                 </p>
                 {canDeleteComment && (
-                  <button
+                  <Button
+                    variant="dangerGhost"
+                    size="sm"
                     onClick={() => handleDeleteComment(comment._id)}
-                    className="text-xs text-red-600 hover:underline"
                   >
                     {t('issueDetail.deleteComment')}
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
@@ -270,12 +262,9 @@ export function IssueDetail() {
               required
               className="flex-1 border border-slate-300 rounded-md px-3 py-2 text-sm"
             />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-blue-700"
-            >
+            <Button type="submit" variant="primary">
               {t('issueDetail.postComment')}
-            </button>
+            </Button>
           </form>
         ) : (
           <p className="text-xs text-slate-400">{t('issueDetail.loginToComment')}</p>
