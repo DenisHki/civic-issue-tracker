@@ -26,11 +26,16 @@ interface Open311Request {
 }
 
 export function guessCategory(text: string): OfficialCategory {
-  const s = text.toLowerCase();
-  if (/kuoppa|reikä|routa/.test(s)) return 'pothole';
-  if (/katuvalo|valaistus|lamppu|valo ei/.test(s)) return 'streetlight';
-  if (/graffiti|töhry|tägi|tagi/.test(s)) return 'graffiti';
-  if (/roska|jäte|sotku|lasimurska/.test(s)) return 'waste';
+  const s = text.toLowerCase().replace(/liikennevalo[a-zäö]*/g, ' ');
+
+  if (/kuopp|kuopan|kuopat|reikä|päällystevaur|routavaur|painauma/.test(s)) return 'pothole';
+  if (/katuvalo|katulamppu|valaistus|valotolppa|lamppu|valot eivät|pimeänä|pimeenä/.test(s)) {
+    return 'streetlight';
+  }
+  if (/graffiti|töhry|tägi/.test(s)) return 'graffiti';
+  if (/roski|roska|jäteast|jätesäil|jätteet|jätteit|sotku|lasimurska|epäsiist/.test(s)) {
+    return 'waste';
+  }
   return 'other';
 }
 

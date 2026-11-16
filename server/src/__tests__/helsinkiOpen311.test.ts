@@ -35,6 +35,33 @@ describe('guessCategory', () => {
     expect(guessCategory('Kadulla on lasimurskaa')).toBe('waste');
     expect(guessCategory('Liikennemerkki kääntynyt väärinpäin.')).toBe('other');
   });
+
+  it('does not mistake traffic lights for streetlights', () => {
+    expect(guessCategory('Liikennevalo ei huomioi pyöräilijöitä. Odotin 10 minuuttia.')).toBe(
+      'other',
+    );
+    expect(guessCategory('Liikennevalot eivät toimi risteyksessä')).toBe('other');
+  });
+
+  it('does not treat "jätetty" (left behind) as waste', () => {
+    expect(
+      guessCategory('Liikennemerkki poistettu, mutta jätetty pieni pätkä putkea jäljelle.'),
+    ).toBe('other');
+  });
+
+  it('recognises plural and inflected forms of pothole', () => {
+    expect(guessCategory('Useita syviä päällystevaurioita (kuoppia) ajoradalla')).toBe('pothole');
+  });
+
+  it('does not match the city name Kuopio', () => {
+    expect(guessCategory('Matka Kuopioon on pitkä')).toBe('other');
+  });
+
+  it('recognises real streetlight and waste wordings', () => {
+    expect(guessCategory('Katulamppu vilkkuu viimeisiään kadun yllä')).toBe('streetlight');
+    expect(guessCategory('Kaksi valotolppaa pimeenä')).toBe('streetlight');
+    expect(guessCategory('Roskista koulun portinpielessä ei ole tyhjennetty')).toBe('waste');
+  });
 });
 
 describe('mapRequest', () => {
