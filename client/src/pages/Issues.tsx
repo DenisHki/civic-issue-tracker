@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
-import { IssueMap, type OfficialIssue } from '../components/IssueMap'; // NEW: OfficialIssue
+import { IssueMap, type OfficialIssue } from '../components/IssueMap';
 import { useTranslation } from 'react-i18next';
+import { StatusBadge } from '../components/StatusBadge';
+import { CATEGORY_KEYS, categoryLabel } from '../lib/categories';
 
 interface Issue {
   _id: string;
@@ -27,15 +29,6 @@ const EMPTY_FILTERS: Filters = { q: '', municipality: '', category: '', status: 
 // official data from Helsinki
 const HELSINKI_CENTER = { lat: 60.1699, lng: 24.9384 };
 const OFFICIAL_RADIUS_KM = 2;
-
-// Maps a category value from the backend to its translation key.
-const CATEGORY_KEYS: Record<string, string> = {
-  pothole: 'issueForm.categoryPothole',
-  streetlight: 'issueForm.categoryStreetlight',
-  graffiti: 'issueForm.categoryGraffiti',
-  waste: 'issueForm.categoryWaste',
-  other: 'issueForm.categoryOther',
-};
 
 const STATUSES = ['reported', 'in_progress', 'resolved'];
 
@@ -230,32 +223,23 @@ export function Issues() {
           )}
 
           {issues.map((issue) => (
-            <div
+            <Link
               key={issue._id}
-              className="bg-white rounded-lg shadow-sm p-4 border border-slate-200"
+              to={`/issues/${issue._id}`}
+              className="block rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:border-blue-300 hover:shadow-md"
             >
-              <div className="flex justify-between items-start gap-2">
-                <Link
-                  to={`/issues/${issue._id}`}
-                  className="font-medium text-slate-800 hover:text-blue-600"
-                >
-                  {issue.title}
-                </Link>
-                <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600 whitespace-nowrap">
-                  {t(`issueDetail.status.${issue.status}`)}
-                </span>
+              <div className="flex items-start justify-between gap-2">
+                <h2 className="font-medium text-slate-800">{issue.title}</h2>
+                <StatusBadge status={issue.status} />
               </div>
-              <p className="text-sm text-slate-600 mt-1">{issue.description}</p>
-              <div className="flex justify-between items-center mt-3 text-xs text-slate-500">
+              <p className="mt-1 text-sm text-slate-600">{issue.description}</p>
+              <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
                 <span>
-                  {issue.municipality} ·{' '}
-                  {CATEGORY_KEYS[issue.category]
-                    ? t(CATEGORY_KEYS[issue.category])
-                    : issue.category}
+                  {issue.municipality} · {categoryLabel(t, issue.category)}
                 </span>
                 <span>👍 {issue.upvoteCount}</span>
               </div>
-            </div>
+            </Link>
           ))}
         </>
       )}

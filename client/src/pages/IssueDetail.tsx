@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
 import { useAuth } from '../context/auth-context';
 import { Button, ButtonLink } from '../components/Button';
+import { StatusBadge } from '../components/StatusBadge';
+import { categoryLabel } from '../lib/categories';
 
 interface Issue {
   _id: string;
@@ -165,13 +167,11 @@ export function IssueDetail() {
           <>
             <div className="flex justify-between items-start">
               <h1 className="text-xl font-semibold text-slate-800">{issue.title}</h1>
-              <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">
-                {t(`issueDetail.status.${issue.status}`)}
-              </span>
+              <StatusBadge status={issue.status} />
             </div>
             <p className="text-slate-600">{issue.description}</p>
             <p className="text-sm text-slate-500">
-              {issue.municipality} · {issue.category}
+              {issue.municipality} · {categoryLabel(t, issue.category)}
             </p>
           </>
         )}

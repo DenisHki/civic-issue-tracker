@@ -22,7 +22,7 @@ export function Navbar() {
     i18n.changeLanguage(i18n.language === 'en' ? 'fi' : 'en');
   }
 
-  const languageLabel = i18n.language === 'en' ? 'FI' : 'EN';
+  const languageLabel = i18n.language === 'en' ? 'EN' : 'FI';
 
   const roleBadge = user && (
     <span
